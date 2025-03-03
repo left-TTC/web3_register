@@ -4,6 +4,9 @@ use solana_program::{account_info::AccountInfo, entrypoint::ProgramResult, msg,
 use num_traits::FromPrimitive;
 use crate::instruction_auto::ProgramInstruction;
 
+pub mod create;
+pub mod delete;
+pub mod check;
 
 pub struct Processor{}
 
@@ -31,8 +34,19 @@ impl Processor{
         msg!("Instruction unpacked");
 
         match instruction_type {
-            ProgramInstruction::REGISTER =>{
-
+            ProgramInstruction::CREATE =>{
+                #[cfg(feature = "Debug")]
+                msg!("INSTRUCTION:CREATE");
+                //Process the data and return the param type
+                let params = match create::Params::get_params(instruction_data) {
+                    Ok(params) => params,
+                    Err(error) =>{
+                        #[cfg(feature = "Debug")]
+                        msg!("Failed to parse params: {:?}", error);
+                        return Err(error)
+                    }
+                };
+                create::process_create(program_id, accounts, params);
             }
             ProgramInstruction::DELETE =>{
 

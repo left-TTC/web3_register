@@ -1,0 +1,1 @@
+//use to delete a domain info and related account
