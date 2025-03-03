@@ -229,7 +229,17 @@ pub fn create<'a, 'b: 'a>(
     accounts: Accounts<'a, AccountInfo<'b>>,
     params: Params,
 ) -> ProgramResult {
+    //check account info
     accounts.check()?;
+    //check funding
+    Check::check_vault_token_account_owner(accounts.vault)?;
+    //Process the requested domain name
+    if true {
+        #[cfg(feature = "Debug")]
+        msg!("Invalid domain");
+        return Err(ProgramError::InvalidArgument);
+    }
+    //
 
     Ok(())
 }

@@ -6,6 +6,7 @@ edition = "2024"
 [features]
 Debug = []
 no-entrypoint = []
+devnet = []
 
 [dependencies]
 solana-program = "2.2.1" 
@@ -14,4 +15,6 @@ num-traits = "0.2.19"
 spl-name-service = "0.3.1"
 num-derive = "0.4.2"
 borsh = "1.5.5"
-
+bonfida-utils = "0.6.7"
+phf = {version = "0.11.3", features = ["macros"]}
+spl-token = {version = "7.0.0", features = ["no-entrypoint"]}
