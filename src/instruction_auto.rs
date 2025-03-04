@@ -7,11 +7,11 @@ pub enum ProgramInstruction{
     CREATE,
     //deprecate a domain
     DELETE,
-    //tranfer a's domain to b's account
-    TRANSFER,
-    //retrun Pubkey by check web3 domain
-    FINDUSER,
-    //retrun domain of account
-    FINDDOMAIN,
+    // //tranfer a's domain to b's account
+    // TRANSFER,
+    // //retrun Pubkey by check web3 domain
+    // FINDUSER,
+    // //retrun domain of account
+    // FINDDOMAIN,
 }
 

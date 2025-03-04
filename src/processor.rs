@@ -6,7 +6,6 @@ use crate::instruction_auto::ProgramInstruction;
 
 pub mod create;
 pub mod delete;
-pub mod check;
 
 pub struct Processor{}
 
@@ -46,18 +45,20 @@ impl Processor{
                         return Err(error)
                     }
                 };
-                create::process_create(program_id, accounts, params);
+                create::process_create(program_id, accounts, params)?;
             }
             ProgramInstruction::DELETE =>{
-
-            }
-            ProgramInstruction::FINDDOMAIN =>{
-
-            }
-            ProgramInstruction::FINDUSER =>{
-
-            }
-            ProgramInstruction::TRANSFER =>{
+                #[cfg(feature = "Debug")]
+                msg!("INSTRUCTION:CREATE");
+                //Process the data and return the param type
+                let params = match delete::Params::get_params(instruction_data) {
+                    Ok(params) => params,
+                    Err(error) =>{
+                        #[cfg(feature = "Debug")]
+                        msg!("Failed to parse params: {:?}", error);
+                        return Err(error)
+                    }
+                };
 
             }
         }

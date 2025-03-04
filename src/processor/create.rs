@@ -1,11 +1,13 @@
 //use to create a domian and account to record the related info about the domain
 
 use borsh::{BorshDeserialize, BorshSerialize};
-use solana_program::msg;
 use std::str::FromStr;
 use solana_program::program_error::ProgramError;
 use solana_program::{account_info::{next_account_info, AccountInfo},pubkey::Pubkey,entrypoint::ProgramResult,};
-use crate::processor::check::Check;
+use crate::utils::Check;
+use crate::utils::{get_name_key, get_hashed_name};
+use spl_name_service::state::{get_seeds_and_key};
+
 #[cfg(feature = "Debug")]
 use solana_program::msg;
 
@@ -215,7 +217,7 @@ pub fn process_create(
         Ok(accounts) => accounts,
         Err(error) =>{
             #[cfg(feature = "Debug")]
-            msg!("accounts parse failed");
+            msg!("accounts parse failed: {:?}", error);
             return Err(ProgramError::InvalidArgument); 
         }
     };
@@ -239,7 +241,43 @@ pub fn create<'a, 'b: 'a>(
         msg!("Invalid domain");
         return Err(ProgramError::InvalidArgument);
     }
-    //
+    //verify name account key
+    let name_account_key = get_name_key(&params.name, None)?;
+    //print error measseage
+    if &name_account_key != accounts.name.key {
+        #[cfg(feature = "Debug")]
+        msg!("Provided wrong name account");
+        return Err(ProgramError::InvalidArgument);
+    }
+    //Calculate PDA and ensure that state_key is the correct auction state account
+    let (state_key, _) = Pubkey::find_program_address(&[&name_account_key.to_bytes()], program_id);
+    if &state_key != accounts.state.key {
+        #[cfg(feature = "Debug")]
+        msg!("An invalid name auctioning state account was provided");
+        return Err(ProgramError::InvalidArgument);
+    }
+    //Check if the domain is currently being auctioned
+    if !accounts.state.data_is_empty() {
+        #[cfg(feature = "Debug")]
+        msg!("The name auctioning state account is not empty.");
+        return Err(ProgramError::InvalidArgument);
+    }
+    //Make sure the domain's reverse lookup account (PDA) is correct before calling the contract
+        //
+    //Determine the price of your domain name
+        //
+    //check the fee about referrer
+    //use invoke to transfer fee
+        //
+    //transfer token from buyer to vault
+    //Also use invoke
+        //
+    //use cpi to create domian name: The current program code is only used to confirm information and transfer money
+        //
+    //Create a reverse lookup account
+    //Also use cpi
+        //
+
 
     Ok(())
 }
